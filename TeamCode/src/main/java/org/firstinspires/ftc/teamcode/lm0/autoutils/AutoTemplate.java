@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.lm0.autoutils;
 
 
+import com.pedropathing.api.Paths;
 import com.pedropathing.math.Pose;
+import com.pedropathing.paths.*;
 
 class AutoTemplate extends AutoBase {
 
@@ -10,7 +12,7 @@ class AutoTemplate extends AutoBase {
     public static Pose pose2 = new Pose(0.0, 0.0, Math.toRadians(-45.0));
     public static Pose defaultEndPose = new Pose(10.0, 0.0, Math.toRadians(0.0));
 
-    protected PathChain toPose1, toPose2then1, toPose2, toEnd;
+    protected Path toPose1, toPose2then1, toPose2, toEnd;
     protected Cycle firstDelayCycle, secondDelayCycle, finalCycle;
 
     @Override
@@ -58,30 +60,13 @@ class AutoTemplate extends AutoBase {
     protected void buildPaths() {
         // instantiate Path and PathChain objects here, using static poses defined in the class definition
         // these will be subsequently registered as cycles in registerPaths()
-        toPose1 = follower.pathBuilder()
-                .addPath(new BezierLine(startingPose, pose1)) // Bezier curves can be used for curved paths, which are often more efficient than lines if possible (retains velocity along curve)
-                .setLinearHeadingInterpolation(startingPose.getHeading(), pose1.getHeading())
-                .build();
+        toPose1 = Paths.line(startingPose, pose1).linear(startingPose, pose1);
 
-        toPose2then1 = follower.pathBuilder()
-                .addPath(new BezierLine(pose1, pose2))
-                .addPath(new BezierLine(pose2, pose1)) // example of multiple paths
-                .setTangentHeadingInterpolation() // tangential heading interpolation is more efficient
-                .build();
+        toPose2then1 = Paths.line(pose1, pose2).tangent();
 
-        toPose2 = follower.pathBuilder()
-                .addPath(new BezierLine(pose1, pose2))
-                .setTangentHeadingInterpolation()
-                // many "callbacks" exist for executing runnables mid-path
-                .addParametricCallback(0.5, () -> {}) // executes the second argument (an empty runnable here) once the robot reaches the parametric halfway point
-                .addTemporalCallback(1.5, () -> {}) // executes the runnable after 1.5 seconds on the current path
-                .addCallback(() -> true, () -> {}) // executes the runnable after the boolean supplier returns true (which it always will, in this case)
-                .build();
+        toPose2 = Paths.line(pose1, pose2).linear(pose1, pose2);
 
-        toEnd = follower.pathBuilder()
-                .addPath(new BezierCurve(pose2, pose1, defaultEndPose))
-                .setTangentHeadingInterpolation()
-                .build();
+        toEnd = Paths.curve(pose2, pose1, defaultEndPose).tangent();
     }
 
     protected void registerPaths() {

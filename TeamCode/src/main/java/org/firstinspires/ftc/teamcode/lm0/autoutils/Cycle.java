@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.lm0.autoutils;
 
+import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.paths.PathChain;
-import com.pedropathing.util.Timer;
+import com.pedropathing.math.Pose;
+import com.pedropathing.paths.Path;
+import com.pedropathing.utils.Timer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -26,7 +28,7 @@ public class Cycle {
         reset();
     }
 
-    public double getPathTime() { return pathTimer.getElapsedTimeSeconds(); }
+    public double getPathTime() { return pathTimer.seconds(); }
 
     public double getPathState() { return pathState; }
 
@@ -50,7 +52,7 @@ public class Cycle {
     public void addDelay(double delaySeconds) {
         addPath(
                 () -> {}, // no action is taken
-                () -> pathTimer.getElapsedTimeSeconds() >= delaySeconds
+                () -> pathTimer.seconds() >= delaySeconds
         );
     }
 
@@ -100,25 +102,11 @@ public class Cycle {
      * Add a path: "follow pedro pathchain"
      *
      * @param follower follower object
-     * @param pathChain pathchain to follow
-     * @param maxPower maximum power to set
+     * @param path path to follow
      */
-    public void addFollowPedroPath(Follower follower, PathChain pathChain, double maxPower) {
+    public void addFollowPedroPath(Follower follower, Path path) {
         addPath(
-                () -> follower.followPath(pathChain, maxPower, true),
-                () -> !follower.isBusy()
-        );
-    }
-
-    /**
-     * Add a path: "follow pedro pathchain"
-     *
-     * @param follower follower object
-     * @param pathChain pathchain to follow
-     */
-    public void addFollowPedroPath(Follower follower, PathChain pathChain) {
-        addPath(
-                () -> follower.followPath(pathChain, true),
+                () -> follower.follow(path),
                 () -> !follower.isBusy()
         );
     }
@@ -177,7 +165,7 @@ public class Cycle {
         pathState = 0;
         hasCurrentPathBeenRun = false;
         // reset timer
-        pathTimer.resetTimer();
+        pathTimer.reset();
     }
 
     private void incrementPathState() {
@@ -186,6 +174,6 @@ public class Cycle {
         if (pathState >= getCycleLength()) pathState = -1;
         hasCurrentPathBeenRun = false;
         // reset timer
-        pathTimer.resetTimer();
+        pathTimer.reset();
     }
 }
