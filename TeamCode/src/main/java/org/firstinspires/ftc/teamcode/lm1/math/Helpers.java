@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.hardwareutils;
+package org.firstinspires.ftc.teamcode.lm1.math;
 
 public class Helpers {
     private Helpers() {

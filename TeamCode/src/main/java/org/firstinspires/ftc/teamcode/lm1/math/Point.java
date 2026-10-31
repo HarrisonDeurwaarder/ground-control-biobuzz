@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.models;
+package org.firstinspires.ftc.teamcode.lm1.math;
 
 public class Point {
     private final double x, y;

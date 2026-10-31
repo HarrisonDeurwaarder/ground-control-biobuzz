@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.lm0.hardwareutils.control.LinearInterpolation;
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.Helpers;
+import org.firstinspires.ftc.teamcode.lm1.math.Helpers;
 import org.firstinspires.ftc.teamcode.lm1.hardwareutils.control.pid.PIDController;
 import org.firstinspires.ftc.teamcode.lm1.hardwareutils.control.pid.PIDGains;
 

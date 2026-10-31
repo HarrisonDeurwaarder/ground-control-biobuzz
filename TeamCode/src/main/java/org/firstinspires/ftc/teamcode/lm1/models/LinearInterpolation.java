@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.lm1.models;
 
+import org.firstinspires.ftc.teamcode.lm1.math.LinearEquation;
+import org.firstinspires.ftc.teamcode.lm1.math.Point;
+
 public class LinearInterpolation implements FunctionApproximator {
 
     private Point[] points;

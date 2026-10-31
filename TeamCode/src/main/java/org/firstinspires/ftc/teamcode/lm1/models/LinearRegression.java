@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.lm1.models;
 
+import org.firstinspires.ftc.teamcode.lm1.math.LinearEquation;
+import org.firstinspires.ftc.teamcode.lm1.math.Point;
+
 public class LinearRegression implements FunctionApproximator {
 
-    private double slope, intercept;
+    private LinearEquation equation;
 
     public LinearRegression(Point... points) {
 
@@ -22,11 +25,9 @@ public class LinearRegression implements FunctionApproximator {
         fit(points);
     }
 
-    public double slope() { return slope; }
-    public double intercept() { return intercept; }
+    public LinearEquation equation() { return equation; }
 
-    public double infer(double x) { return slope * x + intercept; }
-
+    public double infer(double x) { return equation.apply(x); }
     private void fit(Point[] points) {
         // we use the least-squares solution for linear regression
 
@@ -47,8 +48,10 @@ public class LinearRegression implements FunctionApproximator {
         }
 
         // compute SLOPE
-        slope = sxy / sxx;
+        double slope = sxy / sxx;
         // compute INTERCEPT
-        intercept = my - slope * mx;
+        double intercept = my - slope * mx;
+
+        equation = new LinearEquation(slope, intercept);
     }
 }
