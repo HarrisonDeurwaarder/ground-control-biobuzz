@@ -6,19 +6,16 @@ import com.pedropathing.utils.Timer;
 import java.util.ArrayList;
 
 public class AutoBuilder {
-    private Follower follower;
     private final ArrayList<Cycle> cycles = new ArrayList<>();
     private Timer cycleTimer;
     private int cycleState;
 
-    public AutoBuilder(Follower follower) {
+    public AutoBuilder() {
         // initialize timer
         cycleTimer = new Timer();
         // reset cycleState and timer
         cycleState = 0;
         cycleTimer.reset();
-
-        this.follower = follower;
     }
 
     public double getCycleTime() { return cycleTimer.seconds(); }

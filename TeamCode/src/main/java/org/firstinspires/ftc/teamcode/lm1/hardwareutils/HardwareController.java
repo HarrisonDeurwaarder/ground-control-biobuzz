@@ -5,14 +5,11 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.controllers.Intake;
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.controllers.Shooter;
+import org.firstinspires.ftc.teamcode.lm1.hardwareutils.mechanisms.Intake;
+import org.firstinspires.ftc.teamcode.lm1.hardwareutils.mechanisms.Shooter;
 
 @Config
 public class HardwareController {
@@ -51,16 +48,8 @@ public class HardwareController {
         /* LIMELIGHT */
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
-        /* MAP MECHANISM ACTUATORS */
-        // GoBilda Yellowjackets
-        transfer =    hardwareMap.get(DcMotorEx.class, "transfer");
-        flywheel =    hardwareMap.get(DcMotorEx.class, "flywheel");
-        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
-        // Axon MAX MK2
-        flowerMech =  hardwareMap.get(ServoImplEx.class, "flowerMech");
-        intakeServo = hardwareMap.get(ServoImplEx.class, "intakeServo");
-        // Axon MINI MK2
-        hood =        hardwareMap.get(ServoImplEx.class, "hood");
+        intake = new Intake(hardwareMap);
+        shooter = new Shooter(hardwareMap);
 
         setDefaults();
     }
@@ -85,11 +74,5 @@ public class HardwareController {
 
         // SHOOTER
         shooter.setDefaults();
-
-        // set device direction, encoder usage, and zero power behavior (i.e. braking) here
-        // do not set drivetrain configuration; pedro will handle this
-        // don't haphazardly modify drivetrain motors
-        // ...
-
     }
 }

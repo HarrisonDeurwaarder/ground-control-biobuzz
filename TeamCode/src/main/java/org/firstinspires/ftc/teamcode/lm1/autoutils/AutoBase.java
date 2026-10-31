@@ -42,7 +42,7 @@ public abstract class AutoBase extends OpMode {
         follower.update();
         // initialize custom auto objects
         hardwareController = new HardwareController(hardwareMap, follower, HardwareController.Team.RED);
-        autoBuilder = new AutoBuilder(follower);
+        autoBuilder = new AutoBuilder();
 
         // construct paths to register in AutoBuilder
         buildPaths();

@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.lm1.hardwareutils.controllers;
+package org.firstinspires.ftc.teamcode.lm1.hardwareutils.mechanisms;
 
 import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
@@ -30,16 +31,20 @@ public class Shooter {
     public enum TrackingState { TRACK, STATIC, OFF }
 
     private DcMotorEx transfer, flywheel1, flywheel2;
-    private ServoImplEx rotation1, rotation2, hood;
+    private ServoImplEx turret1, turret2, hood;
     private PIDController flywheelPID;
 
     private FeedingState feedingState;
     private TrackingState flywheelState, rotationState, hoodState;
 
-    public Shooter(DcMotorEx transfer, DcMotorEx flywheel1, DcMotorEx flywheel2, ServoImplEx rotation1, ServoImplEx rotation2, ServoImplEx hood) {
+    public Shooter(HardwareMap hardwareMap) {
         // map actuators used by the turret
-        this.transfer = transfer; this.flywheel1 = flywheel1; this.flywheel2 = flywheel2;
-        this.rotation1 = rotation1; this.rotation2 = rotation2; this.hood = hood;
+        transfer = hardwareMap.get(DcMotorEx.class, "transfer");
+        flywheel1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
+        flywheel2 = hardwareMap.get(DcMotorEx.class, "flywheel2");
+        turret1 = hardwareMap.get(ServoImplEx.class, "turret1");
+        turret2 = hardwareMap.get(ServoImplEx.class, "turret2");
+        hood = hardwareMap.get(ServoImplEx.class, "hood");
         // create flywheel pid
         flywheelPID = new PIDController(flywheelGains);
     }
@@ -62,8 +67,8 @@ public class Shooter {
         setFlywheelTracking(TrackingState.TRACK);
 
         // TURRET
-        rotation1.setPwmRange(new PwmControl.PwmRange(500, 2500)); // Axons use a different PWM range than GoBildas
-        rotation2.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        turret1.setPwmRange(new PwmControl.PwmRange(500, 2500)); // Axons use a different PWM range than GoBildas
+        turret2.setPwmRange(new PwmControl.PwmRange(500, 2500));
         setTurretTracking(TrackingState.TRACK);
 
         // HOOD
@@ -162,7 +167,7 @@ public class Shooter {
     }
 
     private double getTurretAngle() {
-        double position = (rotation1.getPosition() + rotation2.getPosition()) / 2.0;
+        double position = (turret1.getPosition() + turret2.getPosition()) / 2.0;
         // negate known offset
         return position * 350.0 * TURRET_GEARING + (TURRET_OFFSET1 + TURRET_OFFSET2) / 2.0;
     }
@@ -172,8 +177,8 @@ public class Shooter {
         double degrees1 = Helpers.snapDegreesAxon(degrees - TURRET_OFFSET1);
         double degrees2 = Helpers.snapDegreesAxon(degrees - TURRET_OFFSET2);
         // push to Axons and apply known offsets
-        rotation1.setPosition(degrees1 / 350.0);
-        rotation2.setPosition(degrees2 / 350.0);
+        turret1.setPosition(degrees1 / 350.0);
+        turret2.setPosition(degrees2 / 350.0);
     }
 
     private double getHoodAngle() {
