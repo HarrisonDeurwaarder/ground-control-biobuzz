@@ -174,8 +174,12 @@ public class Shooter {
 
     private void setTurretAngle(double degrees) {
         // apply safety transforms
-        double degrees1 = Helpers.snapDegreesAxon(degrees - TURRET_OFFSET1);
-        double degrees2 = Helpers.snapDegreesAxon(degrees - TURRET_OFFSET2);
+        double degrees1 = Helpers.snapDegreesAxon(
+                Helpers.boundDegrees(degrees - TURRET_OFFSET1)
+        );
+        double degrees2 = Helpers.snapDegreesAxon(
+                Helpers.boundDegrees(degrees - TURRET_OFFSET2)
+        );
         // push to Axons and apply known offsets
         turret1.setPosition(degrees1 / 350.0);
         turret2.setPosition(degrees2 / 350.0);

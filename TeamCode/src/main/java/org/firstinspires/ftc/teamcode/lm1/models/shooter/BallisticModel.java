@@ -14,11 +14,18 @@ public class BallisticModel {
 
     private double minExitRadians, maxExitRadians, minEntryRadians, maxEntryRadians;
 
+    private final BallisticState state = new BallisticState();
     private final LinearEquation velApx;
     public BallisticModel(LinearEquation velocityApproximator) {
         // require an approximator to map FLYWHEEL linear velocity to EXIT velocity
         velApx = velocityApproximator;
     }
+
+    /* GETTERS */
+
+    public BallisticState state() { return state; }
+
+    /* FUNCTIONAL METHODS */
 
     public BallisticState compute(double dx, double dy, double dz) {
         computeConstants();
@@ -29,7 +36,7 @@ public class BallisticModel {
         // tan(theta_entry) = 2h/dx - tan(theta_exit)
 
         // entry capability bounds defined by the hood
-        double minCapableRadians = computeTheta(r, dz, minEntryRadians), maxCapableRadians = computeTheta(r, dz, maxEntryRadians);
+        double minCapableRadians = computeHoodTheta(r, dz, minEntryRadians), maxCapableRadians = computeHoodTheta(r, dz, maxEntryRadians);
         // theta* is the ideal theta value where flywheel velocity is minimized
         double thetaStar = Math.toRadians(45.0) + Math.atan2(dz, r) / 2.0;
 
@@ -55,9 +62,7 @@ public class BallisticModel {
 
         /* COMPUTE EXIT VELOCITY */
 
-        double numerator = G_IN * r * r;
-        double denominator = 2 * Math.pow(Math.cos(exitTheta), 2.0) * (r * Math.tan(exitTheta) - dz);
-        double exitV = Math.sqrt(numerator / denominator); // this is exit velocity of the ball
+        double exitV = computeExitV(r, dz, exitTheta);
         // COMPRESSION and ENERGY TRANSFER mean ball velocity != tangential flywheel velocity
         // invert the tanVel -> exVel mapping
         double v = velApx.inverse(exitV);
@@ -65,7 +70,13 @@ public class BallisticModel {
         return new BallisticState(v, Math.toDegrees(exitTheta), valid);
     }
 
-    private double computeTheta(double r, double height, double radians) { return Math.atan((2 * height / r) + Math.tan(radians)); }
+    private double computeHoodTheta(double r, double height, double entryRadians) { return Math.atan((2 * height / r) + Math.tan(entryRadians)); }
+
+    private double computeExitV(double r, double height, double exitRadians) {
+        double numerator = G_IN * r * r;
+        double denominator = 2 * Math.pow(Math.cos(exitRadians), 2.0) * (r * Math.tan(exitRadians) - height);
+        return Math.sqrt(numerator / denominator); // this is exit velocity of the ball
+    }
 
     private void computeConstants() {
         // this function will be removed or deleted once angular measurements won't be subject to change
