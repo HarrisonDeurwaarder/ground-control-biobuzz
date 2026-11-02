@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.math;
+package org.firstinspires.ftc.teamcode.lm1.math.linalg;
 
 public class Point {
     private final double x, y;

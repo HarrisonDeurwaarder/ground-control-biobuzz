@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.lm1.models.shooter;
 
-import org.firstinspires.ftc.teamcode.lm1.math.LinearEquation;
-import org.firstinspires.ftc.teamcode.lm1.models.LinearRegression;
+import org.firstinspires.ftc.teamcode.lm1.math.equations.LinearEquation;
 
 public class BallisticModel {
 
@@ -12,10 +11,10 @@ public class BallisticModel {
     public static double         MIN_EXIT_DEGREES = 60.0;
     public static double         MAX_EXIT_DEGREES = 85.0;
 
-    private double minExitRadians, maxExitRadians, minEntryRadians, maxEntryRadians;
+    protected double minExitRadians, maxExitRadians, minEntryRadians, maxEntryRadians;
 
-    private final BallisticState state = new BallisticState();
-    private final LinearEquation velApx;
+    protected final BallisticState state = new BallisticState();
+    protected final LinearEquation velApx;
     public BallisticModel(LinearEquation velocityApproximator) {
         // require an approximator to map FLYWHEEL linear velocity to EXIT velocity
         velApx = velocityApproximator;
@@ -27,7 +26,7 @@ public class BallisticModel {
 
     /* FUNCTIONAL METHODS */
 
-    public BallisticState compute(double dx, double dy, double dz) {
+    public void compute(double dx, double dy, double dz) {
         computeConstants();
         // dx on the shooting plane
         double r = Math.hypot(dx, dy);
@@ -67,18 +66,18 @@ public class BallisticModel {
         // invert the tanVel -> exVel mapping
         double v = velApx.inverse(exitV);
 
-        return new BallisticState(v, Math.toDegrees(exitTheta), valid);
+        state.update(v, exitTheta, valid);
     }
 
-    private double computeHoodTheta(double r, double height, double entryRadians) { return Math.atan((2 * height / r) + Math.tan(entryRadians)); }
+    protected double computeHoodTheta(double r, double height, double entryRadians) { return Math.atan((2 * height / r) + Math.tan(entryRadians)); }
 
-    private double computeExitV(double r, double height, double exitRadians) {
+    protected double computeExitV(double r, double height, double exitRadians) {
         double numerator = G_IN * r * r;
         double denominator = 2 * Math.pow(Math.cos(exitRadians), 2.0) * (r * Math.tan(exitRadians) - height);
         return Math.sqrt(numerator / denominator); // this is exit velocity of the ball
     }
 
-    private void computeConstants() {
+    protected void computeConstants() {
         // this function will be removed or deleted once angular measurements won't be subject to change
         minEntryRadians = Math.toRadians(MIN_ENTRY_DEGREES);
         maxEntryRadians = Math.toRadians(MAX_ENTRY_DEGREES);

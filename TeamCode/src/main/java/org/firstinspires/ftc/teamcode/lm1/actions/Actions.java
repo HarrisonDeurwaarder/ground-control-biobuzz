@@ -23,14 +23,24 @@ public class Actions {
     public static Action make(Runnable onStep) { return new LambdaAction(NOOP, onStep, NOCOND); }
     public static Action doNothingAtAll() { return new LambdaAction(NOOP, NOOP, NOCOND); }
     public static Action waitFor(BooleanSupplier completionCondition) { return new LambdaAction(NOOP, NOOP, completionCondition); }
+
+    // pure delay for X seconds (no actions)
     public static Action delay(double seconds) {
-        // too damn lazy to not do this
+        // too lazy to not do this
         Timer dummyTimer = new Timer();
         return new LambdaAction(dummyTimer::reset, NOOP, () -> dummyTimer.seconds() >= seconds);
     }
 
+    // schedule a task to run every X seconds (when paired with a parallel action)
+    public static Action schedule(Runnable task, double seconds) {
+        Timer dummyTimer = new Timer();
+        return new LambdaAction(
+                () -> { dummyTimer.reset(); task.run(); }, NOOP, () -> dummyTimer.seconds() >= seconds
+        );
+    }
+
+    // run a task for X seconds
     public static Action doForSeconds(Runnable onStep, double seconds) {
-        // too damn lazy to not do this
         Timer dummyTimer = new Timer();
         return new LambdaAction(dummyTimer::reset, onStep, () -> dummyTimer.seconds() >= seconds);
     }

@@ -1,87 +1,140 @@
 package org.firstinspires.ftc.teamcode.lm1.models.shooter;
 
-import org.firstinspires.ftc.teamcode.lm1.math.LinearEquation;
+import org.firstinspires.ftc.teamcode.lm1.math.equations.LinearEquation;
+import org.firstinspires.ftc.teamcode.lm1.math.linalg.Vector;
+import static org.firstinspires.ftc.teamcode.lm1.math.linalg.Vector.*;
 
-public class BallisticModelWithDrag {
+public class BallisticModelWithDrag extends BallisticModel {
+    public static final double[] EXIT_ANGLE_CANDIDATES = {45.0, 50.0, 55.0, 60.0}; // degrees
+    public static final double[] EXIT_VELOCITY_CANDIDATES = {10.0, 20.0}; // in/sec
+    public static final double INIT_EXIT_VEL = 10.0; // in/sec
+    public static final double DT = 0.1;
+    public static final int MAX_SOLVER_ITERATIONS = 100;
+    public static final double MAXIMUM_ENTRY_ANGLE = 0.0;
 
-    public static double                     G_IN = 386.09;
-    public static double     FLYWHEEL_DIAMETER_IN = 2.83;
-    public static double        MIN_ENTRY_DEGREES = 60.0;
-    public static double        MAX_ENTRY_DEGREES = 85.0;
-    public static double         MIN_EXIT_DEGREES = 60.0;
-    public static double         MAX_EXIT_DEGREES = 85.0;
+    private static final double DRAG_COEFFICIENT = 1.0;
 
-    private double minExitRadians, maxExitRadians, minEntryRadians, maxEntryRadians;
+    public enum RootFinder { BISECT, SECANT, REGULA_FALSI };
 
-    private final BallisticState state = new BallisticState();
-    private final LinearEquation velApx;
-    public BallisticModelWithDrag(LinearEquation velocityApproximator) {
-        // require an approximator to map FLYWHEEL linear velocity to EXIT velocity
-        velApx = velocityApproximator;
-    }
+    private RootFinder rootFinder;
+    private double[] exitRadianCandidates;
 
-    /* GETTERS */
-
-    public BallisticState state() { return state; }
+    public BallisticModelWithDrag(LinearEquation velocityApproximator, RootFinder rootFinder) { super(velocityApproximator); this.rootFinder = rootFinder; }
+    public BallisticModelWithDrag(LinearEquation velocityApproximator) { this(velocityApproximator, RootFinder.REGULA_FALSI); }
 
     /* FUNCTIONAL METHODS */
 
-    public BallisticState compute(double dx, double dy, double dz) {
+    public void compute(double dx, double dy, double dz) {
         computeConstants();
         // dx on the shooting plane
         double r = Math.hypot(dx, dy);
+        // compute the drag constant
 
-        /* COMPUTE EXIT ANGLE */
-        // tan(theta_entry) = 2h/dx - tan(theta_exit)
+        // ballistics lacks a closed-form model with drag
+        // hence, we must apply Euler's method to solve the ODE
 
-        // entry capability bounds defined by the hood
-        double minCapableRadians = computeHoodTheta(r, dz, minEntryRadians), maxCapableRadians = computeHoodTheta(r, dz, maxEntryRadians);
-        // theta* is the ideal theta value where flywheel velocity is minimized
-        double thetaStar = Math.toRadians(45.0) + Math.atan2(dz, r) / 2.0;
+        // candidate state vector to compare the entry angles
+        BallisticState[] candidateStates = new BallisticState[EXIT_ANGLE_CANDIDATES.length];
 
-        // clip theta to satify HOOD CONSTRAINTS and prevent DIV BY ZERO
-        // select theta* if possible
-        double exitTheta; boolean valid;
+        for (int i = 0; i < EXIT_ANGLE_CANDIDATES.length; i++) {
+            double candidateExitTheta = EXIT_ANGLE_CANDIDATES[i];
 
-        // OUT-OF-BOUNDS CASES
-        // here, we must snap to the best available option (no perfect solution)
-        if (maxCapableRadians < minExitRadians) { exitTheta = maxCapableRadians; valid = false; }
-        else if (minCapableRadians > maxExitRadians) { exitTheta = minCapableRadians; valid = false; }
+            // we allow a discrete set of entry angles and optimize for each
+            // then, we select the best one
+            // candidate history to inform choosing the next candidate
+            Candidate[] candidateVBuffer = {new Candidate(0.0), new Candidate(0.0)};
+            for (int k = 0; k < EXIT_VELOCITY_CANDIDATES.length; k++) candidateVBuffer[k] = new Candidate(EXIT_VELOCITY_CANDIDATES[k]);
 
-        // IN-BOUNDS CASES
+            // track the current x value of the shooter model
+            // p is position in the coordinate plane pointing for the shooter to the goal + verticality
+            // origin begins from the launch point of the ball
+            Vector p = zero(2);
+            Vector v = vector(candidateVBuffer[1] * Math.sin(candidateExitTheta), candidateVBuffer[1] * Math.cos(candidateExitTheta));
+            Vector a = vector(0.0, -G_IN); // starting acceleration: zero in X, -g in Y
+            // two exit conditions
+            // 1) the model converges to p.x=r
+            // 2) the model fails to converge in reasonable time
+            int j = 0;
+            while (true) {
+                // compute new acceleration (apply the drag force)
+                a = a.sub(
+                        v.mul(v.mag() * DRAG_COEFFICIENT * DT)
+                );
+                // apply acceleration to velocity and velocity to position
+                v = v.add(a.mul(DT)); p = p.add(v.mul(DT));
+
+                /* CHECK CONVERGENCE */
+
+                // compute entry angle
+                double entryTheta = Math.atan2(v.at(0), v.at(1));
+                // if the ball reaches distance AND entry angle < max (required by hive geometry)
+                // then log the state
+                if (p.at(0) >= r && entryTheta < MAXIMUM_ENTRY_ANGLE) {
+                    candidateStates[i] = new BallisticState(
+                            candidateVQueue[1].value, candidateExitTheta, entryTheta, true
+                    );
+                }
+                // increment in place of a for-loop
+                j++;
+                // end with an invalid result if model fails
+                if (j > MAX_SOLVER_ITERATIONS) {
+                    candidateStates[i] = BallisticState.invalid(); break;
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void computeConstants() {
+        super.computeConstants();
+        // tack on the angle array
+        exitRadianCandidates = new double[EXIT_ANGLE_CANDIDATES.length];
+        for (int i = 0; i < EXIT_ANGLE_CANDIDATES.length; i++) exitRadianCandidates[i] = Math.toRadians(EXIT_ANGLE_CANDIDATES[i]);
+    }
+
+    private Candidate[] selectNextCandidate(Candidate[] buffer, int i) {
+        double candidateValue;
+        // use preset candidate values before generating new ones
+        if (i < EXIT_VELOCITY_CANDIDATES.length) candidateValue = EXIT_VELOCITY_CANDIDATES[i];
+        // else, rely on history and generate new ones
         else {
-            // we bound the intersection (knowing they overlap)
-            // try theta* else return something in-bounds
-            double lo = Math.max(minCapableRadians, minExitRadians), hi = Math.min(maxCapableRadians, maxExitRadians);
-
-            // try theta*, then default to minimum
-            exitTheta = Math.max(lo, Math.min(thetaStar, hi));
-            valid = true;
+            // query method by enum value
+            if (rootFinder == RootFinder.BISECT) { candidateValue = bisect(buffer); }
+            else if (rootFinder == RootFinder.SECANT) { candidateValue = secant(buffer); }
+            else { throw new IllegalArgumentException("'rootFinder' must be a RootFinder"); }
         }
 
-        /* COMPUTE EXIT VELOCITY */
-
-        double exitV = computeExitV(r, dz, exitTheta);
-        // COMPRESSION and ENERGY TRANSFER mean ball velocity != tangential flywheel velocity
-        // invert the tanVel -> exVel mapping
-        double v = velApx.inverse(exitV);
-
-        return new BallisticState(v, Math.toDegrees(exitTheta), valid);
+        // wrap value in Candidate
+        Candidate candidate = new Candidate(candidateValue);
+        // update buffer
+        Candidate[] newBuffer = { buffer[1], candidate };
+        return newBuffer;
     }
 
-    private double computeHoodTheta(double r, double height, double entryRadians) { return Math.atan((2 * height / r) + Math.tan(entryRadians)); }
-
-    private double computeExitV(double r, double height, double exitRadians) {
-        double numerator = G_IN * r * r;
-        double denominator = 2 * Math.pow(Math.cos(exitRadians), 2.0) * (r * Math.tan(exitRadians) - height);
-        return Math.sqrt(numerator / denominator); // this is exit velocity of the ball
+    /* ROOT FINDERS */
+    private static double bisect(Candidate[] buffer) {
+        // bisect the two guesses
+        // this method is guaranteed to converge
+        // however, it does so slowly because it's agnostic to how big the miss is
+        return (buffer[0].value + buffer[1].value) / 2.0;
     }
 
-    private void computeConstants() {
-        // this function will be removed or deleted once angular measurements won't be subject to change
-        minEntryRadians = Math.toRadians(MIN_ENTRY_DEGREES);
-        maxEntryRadians = Math.toRadians(MAX_ENTRY_DEGREES);
-        minExitRadians = Math.toRadians(MIN_EXIT_DEGREES);
-        maxExitRadians = Math.toRadians(MAX_EXIT_DEGREES);
+    private static double secant(Candidate[] candidates) {
+        // compute a linear approximation of the model using two guesses
+        // compute the root of that linear equation as the next guess
+        LinearEquation lineq = LinearEquation.fromXY(
+                candidates[0].value, candidates[0].error, candidates[1].value, candidates[1].error
+        );
+        return lineq.root();
+    }
+
+    static class Candidate {
+        double value, error;
+        public Candidate(double value) { this.value = value; }
+
+        /* GETTERS & SETTERS */
+        public double value() { return value; }
+        public double error() { return error; }
+        public void setError(double error) { this.error = error; }
     }
 }
