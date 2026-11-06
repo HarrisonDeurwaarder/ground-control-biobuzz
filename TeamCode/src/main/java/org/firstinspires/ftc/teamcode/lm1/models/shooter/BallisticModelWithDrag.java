@@ -49,7 +49,7 @@ public class BallisticModelWithDrag extends BallisticModel {
             // p is position in the coordinate plane pointing for the shooter to the goal + verticality
             // origin begins from the launch point of the ball
             Vector p = zero(2);
-            Vector v = vector(candidateVBuffer[1] * Math.sin(candidateExitTheta), candidateVBuffer[1] * Math.cos(candidateExitTheta));
+            //Vector v = vector(candidateVBuffer[1] * Math.sin(candidateExitTheta), candidateVBuffer[1] * Math.cos(candidateExitTheta));
             Vector a = vector(0.0, -G_IN); // starting acceleration: zero in X, -g in Y
             // two exit conditions
             // 1) the model converges to p.x=r
@@ -57,23 +57,23 @@ public class BallisticModelWithDrag extends BallisticModel {
             int j = 0;
             while (true) {
                 // compute new acceleration (apply the drag force)
-                a = a.sub(
-                        v.mul(v.mag() * DRAG_COEFFICIENT * DT)
-                );
+                //a = a.sub(
+                        //v.mul(v.mag() * DRAG_COEFFICIENT * DT)
+                //);
                 // apply acceleration to velocity and velocity to position
-                v = v.add(a.mul(DT)); p = p.add(v.mul(DT));
+                //v = v.add(a.mul(DT)); p = p.add(v.mul(DT));
 
                 /* CHECK CONVERGENCE */
 
                 // compute entry angle
-                double entryTheta = Math.atan2(v.at(0), v.at(1));
+                //double entryTheta = Math.atan2(v.at(0), v.at(1));
                 // if the ball reaches distance AND entry angle < max (required by hive geometry)
                 // then log the state
-                if (p.at(0) >= r && entryTheta < MAXIMUM_ENTRY_ANGLE) {
-                    candidateStates[i] = new BallisticState(
-                            candidateVQueue[1].value, candidateExitTheta, entryTheta, true
-                    );
-                }
+                //if (p.at(0) >= r && entryTheta < MAXIMUM_ENTRY_ANGLE) {
+                    //candidateStates[i] = new BallisticState(
+                            //candidateVQueue[1].value, candidateExitTheta, entryTheta, true
+                    //);
+                //}
                 // increment in place of a for-loop
                 j++;
                 // end with an invalid result if model fails

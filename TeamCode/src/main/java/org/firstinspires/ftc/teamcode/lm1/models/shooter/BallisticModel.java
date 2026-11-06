@@ -27,7 +27,7 @@ public class BallisticModel {
     /* FUNCTIONAL METHODS */
 
     public void compute(double dx, double dy, double dz) {
-        computeConstants();
+        computeConversions();
         // dx on the shooting plane
         double r = Math.hypot(dx, dy);
 
@@ -77,7 +77,7 @@ public class BallisticModel {
         return Math.sqrt(numerator / denominator); // this is exit velocity of the ball
     }
 
-    protected void computeConstants() {
+    protected void computeConversions() {
         // this function will be removed or deleted once angular measurements won't be subject to change
         minEntryRadians = Math.toRadians(MIN_ENTRY_DEGREES);
         maxEntryRadians = Math.toRadians(MAX_ENTRY_DEGREES);

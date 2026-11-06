@@ -16,16 +16,26 @@ import org.firstinspires.ftc.teamcode.lm1.hardwareutils.control.pid.PIDGains;
 
 public class Shooter {
 
+    // transfer
     public static double TRANSFER_POWER = 0.8;
+
+    // flywheel
     public static double FLYWHEEL_GEARING = 1.0;
     public static PIDGains flywheelGains = new PIDGains(0.0, 0.0, 0.0, 0.0, 0.0);
     public static LinearInterpolation flywheelInterpolation = new LinearInterpolation();
+
+    // turret
     public static double TURRET_OFFSET1 = 0.0;
     public static double TURRET_OFFSET2 = 0.0;
     public static double TURRET_GEARING = 1.0;
+
+    // hood
     public static double HOOD_OFFSET = 0.0;
     public static double HOOD_GEARING = 1.0;
     public static LinearInterpolation hoodInterpolation = new LinearInterpolation();
+
+    // solver
+    public static double
 
     public enum FeedingState { FEED, HOLD }
     public enum TrackingState { TRACK, STATIC, OFF }

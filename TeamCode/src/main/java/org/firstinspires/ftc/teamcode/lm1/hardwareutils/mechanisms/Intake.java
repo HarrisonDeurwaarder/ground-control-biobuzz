@@ -10,14 +10,18 @@ import org.firstinspires.ftc.teamcode.lm1.math.Helpers;
 
 public class Intake {
 
+    // flower
     public static double FLOWER_UP_DEGREES = 0.0;
     public static double FLOWER_DOWN_DEGREES = 0.0;
     public static double FLOWER_GEARING = 1.0;
+
+    // intake
     public static double INTAKE_UP_DEGREES = 0.0;
     public static double INTAKE_POLLEN_DEGREES = 0.0;
     public static double INTAKE_DOWN_DEGREES = 0.0;
     public static double INTAKE_GEARING = 1.0;
 
+    // defaults
     public static double INTAKE_POWER = 0.8;
     public static DcMotorSimple.Direction INTAKE_DIRECTION = DcMotorSimple.Direction.FORWARD;
     public static DcMotorSimple.Direction OUTTAKE_DIRECTION = DcMotorSimple.Direction.REVERSE;

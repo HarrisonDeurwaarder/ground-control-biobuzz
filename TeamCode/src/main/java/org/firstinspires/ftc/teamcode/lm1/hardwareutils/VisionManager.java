@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.lm1.hardwareutils;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.lm1.actions.Action;
 import static org.firstinspires.ftc.teamcode.lm1.actions.Actions.*;
+
+import java.util.ArrayList;
 
 
 // IMPORTANT
@@ -19,6 +22,7 @@ public class VisionManager {
     public static int POLLEN_IDX = 0;
 
     private Limelight3A limelight;
+    private ArrayList<LLResultTypes.ColorResult> blobs;
 
     public VisionManager(HardwareMap hardwareMap) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -33,7 +37,11 @@ public class VisionManager {
         LLResult result = limelight.getLatestResult();
         // proceed on a substantive result
         if (result != null && result.isValid()) {
-            result.
+            result.get;
         }
+    }
+
+    class PollenDetection {
+        private double x, y;
     }
 }
