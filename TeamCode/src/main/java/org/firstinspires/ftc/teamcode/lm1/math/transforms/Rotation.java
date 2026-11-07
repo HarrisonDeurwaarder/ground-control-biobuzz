@@ -19,7 +19,11 @@ public class Rotation extends LinearTransform {
 
     /* FUNCTIONAL METHODS */
 
-    public Vector undo(Vector v) { return inverse.mul(v); }
+    @Override
+    public Vector undo(Vector v) { return mat.mul(v); }
+
+    @Override
+    public Vector undo(Vector v, Vector dest) { return Matrix.mul(mat, v, dest); }
 
     /* HELPER METHODS */
     private static Matrix build(double rx, double ry, double rz, boolean intrinsic) {

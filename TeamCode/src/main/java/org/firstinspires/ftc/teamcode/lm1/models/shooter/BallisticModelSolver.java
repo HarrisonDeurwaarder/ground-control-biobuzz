@@ -61,6 +61,8 @@ public class BallisticModelSolver extends BallisticModel {
         // all uses of a zero vector are static
         // hence we reuse the same object
         Vector zeroVector2d = Vector.zero(2);
+        // instanciate
+        BallisticState candState = new BallisticState();
 
         /* THETA LOOP */
         for (int i = 0; i < exitRadianCandidates.length; i++) {
@@ -167,7 +169,6 @@ public class BallisticModelSolver extends BallisticModel {
         }
 
         // accept the best state
-        BallisticState candState = new BallisticState();
         candState.mirror(transientStates[0]);
         // iteratively select/discard
         for (int j = 1; j < transientStates.length; j++){
@@ -175,6 +176,7 @@ public class BallisticModelSolver extends BallisticModel {
         }
         // now the user can pull "state" for shot prediction
         // arguments should already be passed with SwM applied
+        state.update(candState);
     }
 
     /* HELPERS */

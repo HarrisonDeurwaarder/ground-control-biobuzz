@@ -22,7 +22,14 @@ public class BallisticState {
     /* FUNCTIONAL METHODS */
 
     public void update(double exitVelocity, double tangentialVelocity, double exitTheta, double entryTheta, double error, boolean valid) {
-        this.exitVelocity = exitVelocity; this.tangentialVelocity = tangentialVelocity; this.exitTheta = exitTheta; this.entryTheta = entryTheta; this.error = error; this.valid = valid;
+        this.exitVelocity = exitVelocity; this.tangentialVelocity = tangentialVelocity;
+        this.exitTheta = exitTheta; this.entryTheta = entryTheta;
+        this.error = error; this.valid = valid;
+    }
+    public void update(BallisticState state) {
+        exitVelocity = state.exitVelocity; tangentialVelocity = state.tangentialVelocity;
+        exitVelocity = state.exitVelocity; entryTheta = state.entryTheta;
+        error = state.error; valid = state.valid;
     }
     public void updateInvalid() { update(0.0, 0.0, 0.0, 0.0, 0.0, false); }
     public void mirror(BallisticState other) { update(other.exitVelocity, other.tangentialVelocity, other.exitTheta, other.entryTheta, other.error, other.valid); }
