@@ -1,12 +1,9 @@
-package org.firstinspires.ftc.teamcode.lm1.hardwareutils;
+package org.firstinspires.ftc.teamcode.lm1.hardware;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.teamcode.lm1.actions.Action;
-import static org.firstinspires.ftc.teamcode.lm1.actions.Actions.*;
 
 import java.util.ArrayList;
 

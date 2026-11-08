@@ -5,7 +5,7 @@ import static org.firstinspires.ftc.teamcode.lm0.hardwareutils.HardwareConstants
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.HardwareController;
+import org.firstinspires.ftc.teamcode.lm1.hardware.HardwareController;
 import org.firstinspires.ftc.teamcode.lm1.teleop.utils.TeleOpBase;
 
 @Disabled

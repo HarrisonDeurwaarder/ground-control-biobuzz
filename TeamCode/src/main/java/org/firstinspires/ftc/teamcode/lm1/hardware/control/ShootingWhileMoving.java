@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.hardwareutils.control;
+package org.firstinspires.ftc.teamcode.lm1.hardware.control;
 
 import com.pedropathing.math.Pose;
 import com.pedropathing.math.Vector;

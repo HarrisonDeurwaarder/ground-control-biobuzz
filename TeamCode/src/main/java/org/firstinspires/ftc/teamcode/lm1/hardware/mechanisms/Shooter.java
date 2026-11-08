@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.hardwareutils.mechanisms;
+package org.firstinspires.ftc.teamcode.lm1.hardware.mechanisms;
 
 import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.lm0.hardwareutils.control.LinearInterpolation;
 import org.firstinspires.ftc.teamcode.lm1.math.Helpers;
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.control.pid.PIDController;
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.control.pid.PIDGains;
+import org.firstinspires.ftc.teamcode.lm1.hardware.control.pid.PIDController;
+import org.firstinspires.ftc.teamcode.lm1.hardware.control.pid.PIDGains;
 
 public class Shooter {
 

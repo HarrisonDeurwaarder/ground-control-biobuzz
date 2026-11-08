@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.autoutils;
+package org.firstinspires.ftc.teamcode.lm1.auto;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.Path;
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.control.pid.PIDController;
+import org.firstinspires.ftc.teamcode.lm1.hardware.control.pid.PIDController;
 
 import java.util.ArrayList;
 import java.util.List;

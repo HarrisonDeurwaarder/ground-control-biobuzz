@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.hardwareutils.mechanisms;
+package org.firstinspires.ftc.teamcode.lm1.hardware.mechanisms;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;

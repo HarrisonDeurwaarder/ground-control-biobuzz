@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.hardwareutils.control.pid;
+package org.firstinspires.ftc.teamcode.lm1.hardware.control.pid;
 
 
 import com.pedropathing.utils.Timer;

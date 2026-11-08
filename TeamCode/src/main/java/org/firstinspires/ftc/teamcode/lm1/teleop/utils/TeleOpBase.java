@@ -7,7 +7,7 @@ import com.pedropathing.math.Pose;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.HardwareController;
+import org.firstinspires.ftc.teamcode.lm1.hardware.HardwareController;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 

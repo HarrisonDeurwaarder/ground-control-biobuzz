@@ -6,7 +6,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.HardwareController;
+import org.firstinspires.ftc.teamcode.lm1.hardware.HardwareController;
 
 public class TurretFunctionTest extends OpMode {
     protected HardwareController hwc;

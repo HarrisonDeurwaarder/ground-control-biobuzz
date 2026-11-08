@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.hardwareutils;
+package org.firstinspires.ftc.teamcode.lm1.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.follower.Follower;
@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.mechanisms.Intake;
-import org.firstinspires.ftc.teamcode.lm1.hardwareutils.mechanisms.Shooter;
+import org.firstinspires.ftc.teamcode.lm1.hardware.mechanisms.Intake;
+import org.firstinspires.ftc.teamcode.lm1.hardware.mechanisms.Shooter;
 
 @Config
 public class HardwareController {

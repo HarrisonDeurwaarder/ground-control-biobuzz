@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.lm1.autoutils;
+package org.firstinspires.ftc.teamcode.lm1.auto;
 
-import com.pedropathing.follower.Follower;
 import com.pedropathing.utils.Timer;
 
 import java.util.ArrayList;
