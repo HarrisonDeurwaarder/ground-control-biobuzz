@@ -5,13 +5,13 @@ import com.pedropathing.utils.Timer;
 import java.util.function.BooleanSupplier;
 
 public class LambdaAction implements Action {
-    private Runnable onStart, onStep;
+    private Runnable onStart, onStep, onStop;
     private BooleanSupplier completionCondition;
     private Timer timer;
     private boolean isCompleted = false; // mark completion and disable bookkeeping if programs run without resetting
 
-    public LambdaAction(Runnable onStart, Runnable onStep, BooleanSupplier completionCondition) {
-        this.onStart = onStart; this.onStep = onStep; this.completionCondition = completionCondition;
+    public LambdaAction(Runnable onStart, Runnable onStep, Runnable onStop, BooleanSupplier completionCondition) {
+        this.onStart = onStart; this.onStep = onStep; this.onStop = onStop ;this.completionCondition = completionCondition;
         // instantiate timer
         timer = new Timer();
     }
@@ -33,6 +33,8 @@ public class LambdaAction implements Action {
         onStep.run();
         // CHECK completion
         isCompleted = completionCondition.getAsBoolean();
+        // run stop if completed
+        if (isCompleted) onStop.run();
         return isCompleted;
     }
     @Override public boolean completed() { return isCompleted; }

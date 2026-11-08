@@ -18,35 +18,36 @@ public class Actions {
 
     /* SINGLE-ACTION STATIC FACTORIES */
 
-    public static Action make(Runnable onStart, Runnable onStep, BooleanSupplier completionCondition) { return new LambdaAction(onStart, onStep, completionCondition); }
-    public static Action make(Runnable onStep, BooleanSupplier completionCondition) { return new LambdaAction(NOOP, onStep, completionCondition); }
-    public static Action make(Runnable onStep) { return new LambdaAction(NOOP, onStep, NOCOND); }
-    public static Action doNothingAtAll() { return new LambdaAction(NOOP, NOOP, NOCOND); }
-    public static Action waitFor(BooleanSupplier completionCondition) { return new LambdaAction(NOOP, NOOP, completionCondition); }
+    public static Action make(Runnable onStart, Runnable onStep, Runnable onStop, BooleanSupplier completionCondition) { return new LambdaAction(onStart, onStep, onStop, completionCondition); }
+    public static Action make(Runnable onStart, Runnable onStep, BooleanSupplier completionCondition) { return new LambdaAction(onStart, onStep, NOOP, completionCondition); }
+    public static Action make(Runnable onStep, BooleanSupplier completionCondition) { return new LambdaAction(NOOP, onStep, NOOP, completionCondition); }
+    public static Action make(Runnable onStep) { return new LambdaAction(NOOP, onStep, NOOP, NOCOND); }
+    public static Action doNothingAtAll() { return new LambdaAction(NOOP, NOOP, NOOP, NOCOND); }
+    public static Action waitFor(BooleanSupplier completionCondition) { return new LambdaAction(NOOP, NOOP, NOOP, completionCondition); }
 
     // pure delay for X seconds (no actions)
     public static Action delay(double seconds) {
         // too lazy to not do this
         Timer dummyTimer = new Timer();
-        return new LambdaAction(dummyTimer::reset, NOOP, () -> dummyTimer.seconds() >= seconds);
+        return new LambdaAction(dummyTimer::reset, NOOP, NOOP, () -> dummyTimer.seconds() >= seconds);
     }
 
     // schedule a task to run every X seconds (when paired with a parallel action)
     public static Action schedule(Runnable task, double seconds) {
         Timer dummyTimer = new Timer();
         return new LambdaAction(
-                () -> { dummyTimer.reset(); task.run(); }, NOOP, () -> dummyTimer.seconds() >= seconds
+                () -> { dummyTimer.reset(); task.run(); }, NOOP, NOOP, () -> dummyTimer.seconds() >= seconds
         );
     }
 
     // run a task for X seconds
     public static Action doForSeconds(Runnable onStep, double seconds) {
         Timer dummyTimer = new Timer();
-        return new LambdaAction(dummyTimer::reset, onStep, () -> dummyTimer.seconds() >= seconds);
+        return new LambdaAction(dummyTimer::reset, onStep, NOOP, () -> dummyTimer.seconds() >= seconds);
     }
 
     public static Action followPath(Follower follower, Path path) {
-        return new LambdaAction(() -> follower.follow(path), NOOP, follower::atParametricEnd);
+        return new LambdaAction(() -> follower.follow(path), NOOP, NOOP, follower::atParametricEnd);
     }
 
     /* COMPOSITE STATIC FACTORIES */
