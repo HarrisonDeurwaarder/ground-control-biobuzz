@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode.lm1.models.shooter;
 
+import android.view.inputmethod.ExtractedText;
+
 public class BallisticState {
     private double exitVelocity, tangentialVelocity, exitTheta, entryTheta, error;
     private boolean valid;
 
     public BallisticState(double exitVelocity, double tangentialVelocity, double exitTheta, double entryTheta, double error, boolean valid) {
-        this.exitVelocity = exitVelocity; this.tangentialVelocity = tangentialVelocity; this.exitTheta = exitTheta; this.entryTheta = entryTheta; this.error = error; this.valid = valid;
+        update(exitVelocity, tangentialVelocity, exitTheta, entryTheta, error, valid);
     }
-    public BallisticState() { this(0.0, 0.0, 0.0, 0.0, 0.0, false); }
+    public BallisticState() {
+        updateInvalid();
+    }
 
     /* GETTERS */
 
@@ -31,10 +35,9 @@ public class BallisticState {
         exitVelocity = state.exitVelocity; entryTheta = state.entryTheta;
         error = state.error; valid = state.valid;
     }
-    public void updateInvalid() { update(0.0, 0.0, 0.0, 0.0, 0.0, false); }
-    public void mirror(BallisticState other) { update(other.exitVelocity, other.tangentialVelocity, other.exitTheta, other.entryTheta, other.error, other.valid); }
+    public void updateInvalid() { update(Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.POSITIVE_INFINITY, false); }
 
     /* FACTORY */
 
-    public static BallisticState invalid() { return new BallisticState(0.0, 0.0, 0.0, 0.0, 0.0, false); }
+    public static BallisticState invalid() { return new BallisticState(); }
 }
