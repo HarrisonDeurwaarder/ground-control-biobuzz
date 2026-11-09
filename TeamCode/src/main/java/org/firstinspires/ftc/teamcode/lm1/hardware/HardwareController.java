@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.lm1.hardware.mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.lm1.hardware.mechanisms.Shooter;
+import org.firstinspires.ftc.teamcode.lm1.hardware.vision.VisionManager;
 
 @Config
 public class HardwareController {
@@ -19,16 +20,14 @@ public class HardwareController {
     private Shooter shooter;
 
     // declare actuators
-    public DcMotorEx leftFront, leftBack, rightFront, rightBack, transfer, flywheel, intakeMotor;
-    public ServoImplEx hood, flowerMech, intakeServo;
-    public Limelight3A limelight;
+    private DcMotorEx leftFront, leftBack, rightFront, rightBack;
 
     // enums
     public enum GateState { OPEN, CLOSED }
     public enum Team { BLUE, RED }
 
     // trackers
-    public Pose currentGoalPose;
+    private Pose currentGoalPose;
 
     /**
      * Instantiate devices and set all to default configuration
@@ -44,9 +43,6 @@ public class HardwareController {
         leftBack =   hardwareMap.get(DcMotorEx.class, "leftBack");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
         rightBack =  hardwareMap.get(DcMotorEx.class, "rightBack");
-
-        /* LIMELIGHT */
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
@@ -65,13 +61,8 @@ public class HardwareController {
      * Set all devices to default configuration (direction, usage of encoder, etc)
      */
     private void setDefaults() {
-        // LIMELIGHT
-        limelight.setPollRateHz(100);
-        limelight.start();
-
         // INTAKE
         intake.setDefaults();
-
         // SHOOTER
         shooter.setDefaults();
     }

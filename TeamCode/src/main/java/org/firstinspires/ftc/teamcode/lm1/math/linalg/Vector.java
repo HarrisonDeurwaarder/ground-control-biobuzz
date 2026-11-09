@@ -8,7 +8,7 @@ public class Vector {
     private double[] values;
     private int dim;
 
-    private enum Operation { ADD, SUBTRACT, MULTIPLY, DIVIDE, EXPONENTIATE }
+    private enum Operation { ADD, SUBTRACT, MULTIPLY, DIVIDE, POWER, EXPONENTIATE }
 
     public Vector(double... n) {
         values = new double[n.length]; // take the contents of the vector
@@ -96,10 +96,20 @@ public class Vector {
     public static Vector div(Vector v, double n, Vector dest)  { return arithmetic(v, n, dest, Operation.DIVIDE); }
 
 
-    // exponentiation
-    public Vector pow(double n)                                { return arithmetic(this, n, this, Operation.EXPONENTIATE); }
-    public static Vector pow(Vector v, double n)               { return arithmetic(v, n, zero(v.dim), Operation.EXPONENTIATE); }
-    public static Vector pow(Vector v, double n, Vector dest)  { return arithmetic(v, n, dest, Operation.EXPONENTIATE); }
+    // power (vector^scalar)
+    public Vector pow(double n)                                { return arithmetic(this, n, this, Operation.POWER); }
+    public static Vector pow(Vector v, double n)               { return arithmetic(v, n, zero(v.dim), Operation.POWER); }
+    public static Vector pow(Vector v, double n, Vector dest)  { return arithmetic(v, n, dest, Operation.POWER); }
+
+    // exponentiation (scalar^vector)
+    public Vector expb(double base)                                { return arithmetic(this, base, this, Operation.EXPONENTIATE); }
+    public static Vector expb(Vector v, double base)               { return arithmetic(v, base, zero(v.dim), Operation.EXPONENTIATE); }
+    public static Vector expb(Vector v, double base, Vector dest)  { return arithmetic(v, base, dest, Operation.EXPONENTIATE); }
+
+    // e^vector
+    public Vector exp()                              { return arithmetic(this, Math.E, this, Operation.EXPONENTIATE); }
+    public static Vector exp(Vector v)               { return arithmetic(v, Math.E, zero(v.dim), Operation.EXPONENTIATE); }
+    public static Vector exp(Vector v, Vector dest)  { return arithmetic(v, Math.E, dest, Operation.EXPONENTIATE); }
 
     // dot product
     public static double dot(Vector v1, Vector v2) {
@@ -138,8 +148,27 @@ public class Vector {
 
     // miscellaneous functional methods
 
-    public double distance(Vector v) { return sub(v).mag(); }
+    public double distance(Vector v) {
+        enforceSameDim(this, v);
+        double[] a = values, b = v.values;
+        // iteratively compute
+        double total = 0.0;
+        for (int i = 0; i < dim; i++) {
+            total += (a[i] - b[i]) * (a[i] - b[i]);
+        }
+        return Math.sqrt(total);
+    }
     public boolean withinDistance(Vector v, double threshold) { return distance(v) <= threshold; }
+
+    public boolean bounded(Vector lo, Vector hi) {
+        enforceSameDim(this, lo, hi);
+        double[] a = lo.values, b = values, c = hi.values;
+        for (int i = 0; i < dim; i++) {
+            // if not in bounds
+            if (a[i] > b[i] || b[i] > c[i]) return false;
+        }
+        return true;
+    }
 
     /* FUNCTIONAL METHODS */
 
@@ -150,11 +179,14 @@ public class Vector {
 
     /* FACTORY */
 
-    public static Vector zero(int dim) {
+    public static Vector filled(double value, int dim) {
         double[] values = new double[dim];
-        Arrays.fill(values, 0.0);
+        Arrays.fill(values, value);
         return new Vector(values);
     }
+
+    public static Vector zero(int dim) { return filled(0.0, dim); }
+    public static Vector one(int dim) { return filled(1.0, dim); }
 
     @NonNull
     public Vector clone() { return new Vector(values.clone()); }
@@ -193,7 +225,8 @@ public class Vector {
             case SUBTRACT:     for (int i = 0; i < dim; i++) o[i] = a[i] - n; break;
             case MULTIPLY:     for (int i = 0; i < dim; i++) o[i] = a[i] * n; break;
             case DIVIDE:       for (int i = 0; i < dim; i++) o[i] = a[i] / n; break;
-            case EXPONENTIATE: for (int i = 0; i < dim; i++) o[i] = Math.pow(a[i], n); break;
+            case POWER:        for (int i = 0; i < dim; i++) o[i] = Math.pow(a[i], n); break;
+            case EXPONENTIATE: for (int i = 0; i < dim; i++) o[i] = Math.pow(n, a[i]); break;
         }
         // 1) for logically returning the output nonexistent elsewhere
         // 2) for enabling chaining of vector ops

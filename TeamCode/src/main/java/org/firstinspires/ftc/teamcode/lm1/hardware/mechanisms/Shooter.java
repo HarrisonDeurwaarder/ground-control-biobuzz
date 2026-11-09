@@ -34,9 +34,6 @@ public class Shooter {
     public static double HOOD_GEARING = 1.0;
     public static LinearInterpolation hoodInterpolation = new LinearInterpolation();
 
-    // solver
-    public static double
-
     public enum FeedingState { FEED, HOLD }
     public enum TrackingState { TRACK, STATIC, OFF }
 
@@ -156,19 +153,17 @@ public class Shooter {
         setHoodAngle(degrees);
     }
 
-    /*
-    * INTERNAL METHODS
-    */
+    /* HELPERS */
 
-    private double getFlywheelVelocity() {
+    public double getFlywheelVelocity() {
         double avg = (flywheel1.getVelocity(AngleUnit.DEGREES) + flywheel2.getVelocity(AngleUnit.DEGREES)) / 2.0;
         // convert degrees/second to rpm
         return (avg * FLYWHEEL_GEARING) / 6.0; // dps * (1rot/360deg) * (60sec/min)
     }
 
-    private void setFlywheelCommand(double rpm) { flywheelPID.changeSetpoint(rpm); }
+    public void setFlywheelCommand(double rpm) { flywheelPID.changeSetpoint(rpm); }
 
-    private void updateFlywheelEffort() {
+    public void updateFlywheelEffort() {
         double power = flywheelPID.compute(
                 getFlywheelVelocity()
         );
@@ -176,13 +171,13 @@ public class Shooter {
         flywheel2.setPower(power);
     }
 
-    private double getTurretAngle() {
+    public double getTurretAngle() {
         double position = (turret1.getPosition() + turret2.getPosition()) / 2.0;
         // negate known offset
         return position * 350.0 * TURRET_GEARING + (TURRET_OFFSET1 + TURRET_OFFSET2) / 2.0;
     }
 
-    private void setTurretAngle(double degrees) {
+    public void setTurretAngle(double degrees) {
         // apply safety transforms
         double degrees1 = Helpers.snapDegreesAxon(
                 Helpers.boundDegrees(degrees - TURRET_OFFSET1)
@@ -195,13 +190,13 @@ public class Shooter {
         turret2.setPosition(degrees2 / 350.0);
     }
 
-    private double getHoodAngle() {
+    public double getHoodAngle() {
         double position = hood.getPosition();
         // transform
         return position * HOOD_GEARING - HOOD_OFFSET;
     }
 
-    private void setHoodAngle(double degrees) {
+    public void setHoodAngle(double degrees) {
         // apply safety transforms
         degrees = Helpers.snapDegreesAxon(degrees - HOOD_OFFSET);
         // push to Axons and apply known offsets
