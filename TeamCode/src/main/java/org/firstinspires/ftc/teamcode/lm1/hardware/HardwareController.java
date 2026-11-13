@@ -19,11 +19,16 @@ public class HardwareController {
     private Intake intake;
     private Shooter shooter;
 
+    // goal poses
+    private Pose posRedGoal =  new Pose(0.0, 0.0);
+    private Pose negRedGoal =  new Pose(0.0, 0.0);
+    private Pose posBlueGoal = new Pose(0.0, 0.0);
+    private Pose negBlueGoal = new Pose(0.0, 0.0);
+
     // declare actuators
     private DcMotorEx leftFront, leftBack, rightFront, rightBack;
 
     // enums
-    public enum GateState { OPEN, CLOSED }
     public enum Team { BLUE, RED }
 
     // trackers
@@ -52,10 +57,17 @@ public class HardwareController {
 
     /* GETTERS AND SETTERS */
 
-    public Intake getIntake() { return intake; }
-    public Shooter getShooter() { return shooter; }
-    public Team getTeam() { return team; }
-    public void setTeam(Team team) { this.team = team; }
+    public Intake intake() { return intake; }
+    public Shooter shooter() { return shooter; }
+    public Team team() { return team; }
+    public Pose getGoal() {
+        if (team == Team.RED && follower.pose().y() >= 0) { return posRedGoal; }
+        else if (team == Team.RED && follower.pose().y() < 0) { return negRedGoal; }
+        else if (team == Team.BLUE && follower.pose().y() >= 0) { return posBlueGoal; }
+        else { return posRedGoal; }
+    }
+
+    /* HELPERS */
 
     /**
      * Set all devices to default configuration (direction, usage of encoder, etc)

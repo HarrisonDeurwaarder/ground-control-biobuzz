@@ -15,34 +15,25 @@ public class Intake {
     public static double FLOWER_DOWN_DEGREES = 0.0;
     public static double FLOWER_GEARING = 1.0;
 
-    // intake
-    public static double INTAKE_UP_DEGREES = 0.0;
-    public static double INTAKE_POLLEN_DEGREES = 0.0;
-    public static double INTAKE_DOWN_DEGREES = 0.0;
-    public static double INTAKE_GEARING = 1.0;
-
     // defaults
     public static double INTAKE_POWER = 0.8;
     public static DcMotorSimple.Direction INTAKE_DIRECTION = DcMotorSimple.Direction.FORWARD;
     public static DcMotorSimple.Direction OUTTAKE_DIRECTION = DcMotorSimple.Direction.REVERSE;
 
     public enum    FlowerState { UP, DOWN }
-    public enum  PositionState { UP, POLLEN, DOWN }
     public enum     PowerState { ON, OFF }
     public enum DirectionState { INTAKE, OUTTAKE }
 
     public FlowerState       flowerState = FlowerState.UP;
-    public PositionState   positionState = PositionState.UP;
     public PowerState         powerState = PowerState.OFF;
     public DirectionState directionState = DirectionState.INTAKE;
 
     DcMotorEx intakeMotor;
-    ServoImplEx intakeServo, flower;
+    ServoImplEx flower;
 
     public Intake(HardwareMap hardwareMap) {
         // map actuators used by the intake
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
-        intakeServo = hardwareMap.get(ServoImplEx.class, "intakeServo");
         flower = hardwareMap.get(ServoImplEx.class, "flower");
     }
 
@@ -50,10 +41,6 @@ public class Intake {
         // INTAKE MOTOR
         setDirection(DirectionState.INTAKE);
         setPower(PowerState.OFF);
-
-        // INTAKE SERVO
-        intakeServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
-        setIntakePosition(PositionState.UP);
 
         // FLOWER SERVO
         flower.setPwmRange(new PwmControl.PwmRange(500, 2500));
@@ -73,20 +60,6 @@ public class Intake {
     }
     public void toggleFlower() {
         setFlowerPosition((getFlowerPosition() == FlowerState.UP) ? FlowerState.DOWN : FlowerState.UP);
-    }
-
-    /* POSITION */
-    public PositionState getIntakePosition() { return positionState; }
-    public void setIntakePosition(PositionState state) {
-        positionState = state;
-        // apply
-        if (state == PositionState.UP) {
-            setIntakeDegrees(INTAKE_UP_DEGREES);
-        } else if (state == PositionState.POLLEN) {
-            setIntakeDegrees(INTAKE_UP_DEGREES);
-        } else if (state == PositionState.DOWN) {
-            setIntakeDegrees(INTAKE_DOWN_DEGREES);
-        }
     }
 
     /* POWER */
@@ -132,16 +105,5 @@ public class Intake {
         degrees = Helpers.boundDegrees(degrees * FLOWER_GEARING); // convert to output degrees
         degrees = Helpers.snapDegreesAxon(degrees);
         flower.setPosition(degrees / 350.0);
-    }
-
-    private double getIntakeDegrees() {
-        return intakeServo.getPosition() * 350.0 / INTAKE_GEARING;
-    }
-
-    private void setIntakeDegrees(double degrees) {
-        // preprocess degrees
-        degrees = Helpers.boundDegrees(degrees * INTAKE_GEARING); // convert to output degrees
-        degrees = Helpers.snapDegreesAxon(degrees);
-        intakeServo.setPosition(degrees / 350.0);
     }
 }

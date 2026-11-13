@@ -66,7 +66,7 @@ public class BallisticModel {
         // invert the tanVel -> exVel mapping
         double v = velApx.inverse(exitV);
 
-        state.update(v, exitTheta, valid);
+        //state.update(v, exitTheta, valid);
     }
 
     protected double computeHoodTheta(double r, double height, double entryRadians) { return Math.atan((2 * height / r) + Math.tan(entryRadians)); }

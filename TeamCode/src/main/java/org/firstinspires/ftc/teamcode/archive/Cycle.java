@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.auto;
+package org.firstinspires.ftc.teamcode.archive;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.Path;

@@ -4,7 +4,6 @@ import org.firstinspires.ftc.teamcode.lm1.math.equations.LinearEquation;
 import org.firstinspires.ftc.teamcode.lm1.math.linalg.Point;
 
 public class LinearRegression implements FunctionApproximator {
-
     private LinearEquation equation;
 
     public LinearRegression(Point... points) {

@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.lm1.auto;
+package org.firstinspires.ftc.teamcode.lm1.auto.utils;
 
 
 import com.pedropathing.api.Paths;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
+
+import org.firstinspires.ftc.teamcode.archive.Cycle;
 
 class AutoTemplate extends AutoBase {
 

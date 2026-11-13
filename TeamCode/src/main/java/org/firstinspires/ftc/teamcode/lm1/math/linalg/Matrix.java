@@ -32,7 +32,7 @@ public class Matrix {
         this.values = values.clone();
     }
 
-    /* GETTERS */
+    /* GETTERS & SETTERS */
 
     public double[][] values() {
         double[][] array2d = new double[rows][cols];
@@ -41,10 +41,26 @@ public class Matrix {
         }
         return array2d;
     }
-
-    public double at(int row, int col) { return Matrix.get(values, cols, row, col); }
     public int rows() { return rows; }
     public int cols() { return cols; }
+
+    public double at(int row, int col) { return Matrix.get(values, cols, row, col); }
+
+    public void set(double[]... values) {
+        int nomDim = values[0].length;
+        enforceCustomDim(this, values.length, nomDim);
+        enforceCustomDim(this.values.length, values.length);
+        // flatten values
+        for (int i = 0; i < values.length; i++) {
+            for (int j = 0; j < nomDim; j++) { set(this.values, values[i][j], nomDim, i, j); }
+        }
+    }
+
+    public void set(double... values) {
+        enforceCustomDim(this.values.length, values.length);
+        // copy already flattened values
+        System.arraycopy(values, 0, values, 0, values.length);
+    }
 
     /* OPERATIONS */
 

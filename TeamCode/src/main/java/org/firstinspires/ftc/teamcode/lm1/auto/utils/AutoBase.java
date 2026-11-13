@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lm1.auto;
+package org.firstinspires.ftc.teamcode.lm1.auto.utils;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -7,6 +7,7 @@ import com.pedropathing.math.Pose;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.archive.AutoBuilder;
 import org.firstinspires.ftc.teamcode.lm1.hardware.HardwareController;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 

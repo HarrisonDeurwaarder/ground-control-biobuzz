@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.lm1.math.linalg;
 
 import androidx.annotation.NonNull;
 
+import com.pedropathing.math.Pose;
+
 import java.util.Arrays;
 
 public class Vector {
@@ -175,6 +177,12 @@ public class Vector {
     public void from(Vector v) {
         enforceSameDim(this, v);
         System.arraycopy(v.values, 0, values, 0, values.length); dim = v.dim;
+    }
+
+    public Pose toPose() {
+        if (dim == 2) { return new Pose(at(0), at(1)); }
+        else if (dim == 3) { return new Pose(at(0), at(1), at(2)); }
+        else { throw new UnsupportedOperationException("Can only convert a 2D or 3D vector to Pose"); }
     }
 
     /* FACTORY */

@@ -15,20 +15,24 @@ public class BasicIntake extends TeleOpBase {
     public void init() {
         defaultStartingPose = startingPose;
         super.init();
-        intake = hwc.getIntake();
+        intake = hwc.intake();
     }
 
     @Override
     public void updateControls() {
         // TRIGGER INTAKE
-        if (gamepad1.right_trigger_pressed) { intake.setPower(Intake.PowerState.ON); }
+        if (gamepad1.leftTriggerWasPressed()) { intake.setPower(Intake.PowerState.ON); }
+        else if (gamepad1.leftTriggerWasReleased()) { intake.setPower(Intake.PowerState.OFF); }
         // TOGGLE INTAKE/OUTTAKE
-        if (gamepad1.aWasPressed()) { intake.toggleDirection(); }
+        if (gamepad1.leftBumperWasPressed()) { intake.toggleDirection(); }
+        // TOGGLE FLOWER
+        if (gamepad1.bWasPressed()) { intake.toggleFlower(); }
     }
 
     @Override
     public void displayControls() {
-        telemetry.addLine("    Power - RT");
+        telemetry.addLine("    Power - LT");
         telemetry.addLine("Direction - A");
+        telemetry.addLine("   Flower - B");
     }
 }
