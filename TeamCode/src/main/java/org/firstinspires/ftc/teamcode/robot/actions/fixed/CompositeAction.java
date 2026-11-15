@@ -6,8 +6,7 @@ import org.firstinspires.ftc.teamcode.robot.actions.Action;
 
 import java.util.Arrays;
 
-abstract public class
-CompositeAction implements Action {
+abstract public class CompositeAction implements Action {
     // three subaction tracking arrays for 1) objects 2) completions 3) starts
     protected Action[] subactions;
     protected boolean[] completions;
@@ -43,7 +42,7 @@ CompositeAction implements Action {
     public boolean[] starts() { return starts.clone(); }
     public int length() { return subactions.length; }
 
-    protected void attemptStart(int i) {
+    public void attemptStart(int i) {
         if (!starts[i]) {
             subactions[i].start();
             starts[i] = true; // mark as started

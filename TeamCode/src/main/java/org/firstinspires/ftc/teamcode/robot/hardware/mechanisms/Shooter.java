@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.hardware.mechanisms;
 
-import com.pedropathing.follower.Follower;
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -19,15 +19,18 @@ import org.firstinspires.ftc.teamcode.robot.hardware.control.pid.PIDGains;
 import static org.firstinspires.ftc.teamcode.robot.math.linalg.Point.point;
 
 
+@Configurable
 public class Shooter {
 
     // transfer
-    public static double GATE_FEEDING_DEGREES = 0.0, GATE_HOLDING_DEGREES = 0.0;
+    public static double GATE_FEEDING_DEGREES = 105.0, GATE_HOLDING_DEGREES = 120.0;
 
     // flywheel
     public static double FLYWHEEL_GEARING = 1.0;
     public static PIDGains flywheelGains = new PIDGains(0.0, 0.0, 0.0, 0.0, 0.0);
     public static double toF = 1.0;
+    public static double power = 0.95;
+    public static double angle = 0.0;
     private final LinearInterpolation flywheelInterpolation = new LinearInterpolation(
             point(0.0, 0.0),
             point(1.0, 0.0)
@@ -44,7 +47,6 @@ public class Shooter {
     private final DcMotorEx flywheel;
     private final ServoImplEx gate, turret1, turret2;
     private final PIDController flywheelPID;
-    private final Follower follower;
 
     private FeedingState feedingState;
     private TrackingState flywheelState, rotationState;
@@ -55,8 +57,7 @@ public class Shooter {
     // scratch variables
     private Vector poseVect = Vector.zero(3);
 
-    public Shooter(HardwareMap hardwareMap, Follower follower) {
-        this.follower = follower;
+    public Shooter(HardwareMap hardwareMap) {
         // map actuators used by the turret
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         gate =    hardwareMap.get(ServoImplEx.class, "gate");
@@ -80,7 +81,8 @@ public class Shooter {
         setFlywheelTracking(TrackingState.TRACK);
 
         // GATE
-        turret1.setPwmRange(new PwmControl.PwmRange(500, 2500)); // Axons use a different PWM range than GoBildas
+        gate.setPwmRange(new PwmControl.PwmRange(500, 2500)); // Axons use a different PWM range than GoBildas
+        gate.setPwmEnable();
         setFeeding(FeedingState.HOLD);
 
         // TURRET
@@ -99,37 +101,25 @@ public class Shooter {
         setTurretAngle(0.0);
     }
 
-    /* FUNCTIONAL METHODS */
-
-    public void command(Vector goal) {
-        // COMPUTE SWM ROBOT POSE
-        Pose pose = follower.pose();
-        if (useSwM) { pose = swm.applyToPose(pose, Vector.zero(3), follower.velocity(), toF); }
-
-        // COMPUTE TURRET ANGLE
-        poseVect.set(pose.x(), pose.y());
-        double angle = computeTurretDegrees(poseVect, goal);
-        setTurretAngle(angle);
-
-        // COMPUTE FLYWHEEL VELOCITY
-        double rpm = flywheelInterpolation.infer(poseVect.distance(goal));
-        setFlywheelCommand(rpm);
-    }
-
     public void update() {
-        updateFlywheelEffort();
+        if (flywheelState == TrackingState.TRACK) { flywheel.setPower(power); }
+        else flywheel.setPower(0.0);
+        setTurretAngle(angle);
     }
 
     /* FEEDING */
 
     public FeedingState getFeeding() { return feedingState; }
     public void setFeeding(FeedingState state) {
+        // return on same state
+        if (feedingState == state) return;
+
         feedingState = state;
         // apply
         if (state == FeedingState.FEED) {
-            gate.setPosition(GATE_FEEDING_DEGREES);
+            gate.setPosition(GATE_FEEDING_DEGREES / 350.0);
         } else if (state == FeedingState.HOLD) {
-            gate.setPosition(GATE_HOLDING_DEGREES);
+            gate.setPosition(GATE_HOLDING_DEGREES / 350.0);
         }
     }
     public void toggleFeeding() {
@@ -139,7 +129,12 @@ public class Shooter {
     /* FLYWHEEL */
 
     public TrackingState getFlywheelTracking() { return flywheelState; }
-    public void setFlywheelTracking(TrackingState state) { flywheelState = state; }
+    public void setFlywheelTracking(TrackingState state) {
+        // return on same state
+        if (flywheelState == state) return;
+
+        flywheelState = state;
+    }
     public void toggleFlywheelTracking() {
         setFlywheelTracking((getFlywheelTracking() == TrackingState.TRACK) ? TrackingState.STATIC : TrackingState.TRACK);
     }
@@ -147,7 +142,12 @@ public class Shooter {
     /* TURRET */
 
     public TrackingState getTurretTracking() { return rotationState; }
-    public void setTurretTracking(TrackingState state) { rotationState = state; }
+    public void setTurretTracking(TrackingState state) {
+        // return on same state
+        if (rotationState == state) return;
+
+        rotationState = state;
+    }
     public void toggleTurretTracking() {
         setTurretTracking((getTurretTracking() == TrackingState.TRACK) ? TrackingState.STATIC : TrackingState.TRACK);
     }

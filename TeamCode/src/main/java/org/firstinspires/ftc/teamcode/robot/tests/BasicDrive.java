@@ -10,8 +10,12 @@ public class BasicDrive extends TeleOpBase {
     Pose startingPose = new Pose(0.0, 0.0);
 
     @Override
+    public Pose getStartingPose() {
+        return startingPose;
+    }
+
+    @Override
     public void init() {
-        defaultStartingPose = startingPose;
         super.init();
     }
 

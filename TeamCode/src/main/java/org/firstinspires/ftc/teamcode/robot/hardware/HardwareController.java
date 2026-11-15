@@ -1,29 +1,30 @@
 package org.firstinspires.ftc.teamcode.robot.hardware;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.robot.hardware.mechanisms.Shooter;
+import org.firstinspires.ftc.teamcode.robot.math.linalg.Vector;
 
 @Configurable
 public class HardwareController {
-    private Follower follower;
     private Team team;
     private Intake intake;
     private Shooter shooter;
 
     // goal poses
-    private Pose posRedGoal =  new Pose(0.0, 0.0);
-    private Pose negRedGoal =  new Pose(0.0, 0.0);
-    private Pose posBlueGoal = new Pose(0.0, 0.0);
-    private Pose negBlueGoal = new Pose(0.0, 0.0);
+    private Vector posRedGoal =  new Vector(0.0, 0.0);
+    private Vector negRedGoal =  new Vector(0.0, 0.0);
+    private Vector posBlueGoal = new Vector(0.0, 0.0);
+    private Vector negBlueGoal = new Vector(0.0, 0.0);
 
     // declare actuators
-    private DcMotorEx leftFront, leftBack, rightFront, rightBack;
+    public DcMotorEx leftFront, leftBack, rightFront, rightBack;
 
     // enums
     public enum Team { BLUE, RED }
@@ -36,8 +37,7 @@ public class HardwareController {
      *
      * @param hardwareMap HardwareMap object
      */
-    public HardwareController(HardwareMap hardwareMap, Follower follower, Team team) {
-        this.follower = follower;
+    public HardwareController(HardwareMap hardwareMap, Team team) {
         this.team = team;
 
         /* DRIVETRAIN */
@@ -57,11 +57,9 @@ public class HardwareController {
     public Intake intake() { return intake; }
     public Shooter shooter() { return shooter; }
     public Team team() { return team; }
-    public Pose getGoal() {
-        if (team == Team.RED && follower.pose().y() >= 0) { return posRedGoal; }
-        else if (team == Team.RED && follower.pose().y() < 0) { return negRedGoal; }
-        else if (team == Team.BLUE && follower.pose().y() >= 0) { return posBlueGoal; }
-        else { return posRedGoal; }
+    public Vector getGoal() {
+        // without localization the field half is unknown, so pick by team only
+        return (team == Team.RED) ? posRedGoal : posBlueGoal;
     }
 
     public void disable() {
@@ -75,6 +73,15 @@ public class HardwareController {
      * Set all devices to default configuration (direction, usage of encoder, etc)
      */
     private void setDefaults() {
+        // DRIVETRAIN (directions match pedro/Constants.drivetrainConfig)
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        for (DcMotorEx motor : new DcMotorEx[]{leftFront, leftBack, rightFront, rightBack}) {
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
         // INTAKE
         intake.setDefaults();
         // SHOOTER

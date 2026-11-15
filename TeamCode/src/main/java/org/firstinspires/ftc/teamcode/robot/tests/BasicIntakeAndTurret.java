@@ -14,8 +14,12 @@ public class BasicIntakeAndTurret extends TeleOpBase {
     Shooter shooter;
 
     @Override
+    public Pose getStartingPose() {
+        return startingPose;
+    }
+
+    @Override
     public void init() {
-        defaultStartingPose = startingPose;
         super.init();
         intake = hwc.intake();
         shooter = hwc.shooter();

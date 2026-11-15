@@ -26,11 +26,12 @@ public class Intake {
     private PowerState         powerState = PowerState.OFF;
     private DirectionState directionState = DirectionState.INTAKE;
 
-    DcMotorEx intakeMotor;
+    DcMotorEx intake1, intake2;
 
     public Intake(HardwareMap hardwareMap) {
         // map actuators used by the intake
-        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
+        intake1 = hardwareMap.get(DcMotorEx.class, "intake1");
+        intake2 = hardwareMap.get(DcMotorEx.class, "intake2");
     }
 
     /* SETTERS */
@@ -42,18 +43,24 @@ public class Intake {
     }
 
     public void disable() {
-        intakeMotor.setPower(0.0);
+        intake1.setPower(0.0);
+        intake2.setPower(0.0);
     }
 
     /* POWER */
     public PowerState getPower() { return powerState; }
     public void setPower(PowerState state) {
+        // return on same state
+        if (powerState == state) return;
+
         powerState = state;
         // apply
         if (state == PowerState.ON) {
-            intakeMotor.setPower(INTAKE_POWER);
+            intake1.setPower(INTAKE_POWER);
+            intake2.setPower(INTAKE_POWER);
         } else if (state == PowerState.OFF) {
-            intakeMotor.setPower(0.0);
+            intake1.setPower(0.0);
+            intake2.setPower(0.0);
         }
     }
     public void togglePower() {
@@ -63,13 +70,24 @@ public class Intake {
     /* DIRECTION */
     public DirectionState getDirection() { return directionState; }
     public void setDirection(DirectionState state) {
+        // return on same state
+        if (directionState == state) return;
+
         directionState = state;
         // apply
         if (state == DirectionState.INTAKE) {
-            intakeMotor.setDirection(INTAKE_DIRECTION);
+            intake1.setDirection(INTAKE_DIRECTION);
+            intake2.setDirection(INTAKE_DIRECTION);
         } else if (state == DirectionState.OUTTAKE) {
-            intakeMotor.setDirection(OUTTAKE_DIRECTION);
+            intake1.setDirection(OUTTAKE_DIRECTION);
+            intake2.setDirection(OUTTAKE_DIRECTION);
         }
+        // a direction change only reaches the motor on the next power write,
+        // so resend power if the intake is already running
+        if (powerState == PowerState.ON) {
+            intake1.setPower(INTAKE_POWER);
+            intake2.setPower(INTAKE_POWER);
+        };
     }
     public void toggleDirection() {
         setDirection((getDirection() == DirectionState.INTAKE) ? DirectionState.OUTTAKE : DirectionState.INTAKE);

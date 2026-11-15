@@ -6,21 +6,16 @@ import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.teamcode.robot.hardware.HardwareController;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @Configurable
-@TeleOp(name="Motor", group="Test")
-public class FlywheelPIDTuner extends OpMode {
+@TeleOp(name="Servo (Unpowered)", group="Test")
+public class UnpoweredServoTester extends OpMode {
     protected Timer opmodeTimer;
     private TelemetryManager panels;
-    private HardwareController hwc;
 
     // parameters
-    public static double POWER = 0.0;
-    public DcMotorEx motor;
+    public ServoImplEx servo;
 
     @Override
     public void init() {
@@ -30,21 +25,17 @@ public class FlywheelPIDTuner extends OpMode {
 
         panels = PanelsTelemetry.INSTANCE.getTelemetry();
 
-        motor = hardwareMap.get(DcMotorEx.class, "motor");
+        servo = hardwareMap.get(ServoImplEx.class, "servo");
+        servo.setPwmDisable();
     }
 
     @Override
     public void loop() {
-        // push values
-        motor.setPower(POWER);
-
-        panels.debug("Power", POWER);
-        panels.debug("Power Read", motor.getPower());
+        panels.debug("Position Read", servo.getPosition() * 350.0);
         panels.update();
 
         //dashboard.sendTelemetryPacket(packet);
-        telemetry.addData("Power", motor.getPower());
-        telemetry.addData("Power Read", POWER);
+        telemetry.addData("Position", servo.getPosition() * 350.0);
         telemetry.update();
     }
 }

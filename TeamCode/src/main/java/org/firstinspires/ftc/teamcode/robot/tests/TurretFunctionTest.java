@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.tests;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.follower.Follower;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,7 +12,6 @@ import org.firstinspires.ftc.teamcode.robot.hardware.mechanisms.Shooter;
 @TeleOp(name="Turret Functions", group="Test")
 public class TurretFunctionTest extends OpMode {
     protected HardwareController hwc;
-    protected Follower follower;
     protected Shooter shooter;
 
     // teleop timer
@@ -38,7 +36,7 @@ public class TurretFunctionTest extends OpMode {
         //dashboard = FtcDashboard.getInstance();
 
         // initialize hwc
-        hwc = new HardwareController(hardwareMap, follower, HardwareController.Team.RED);
+        hwc = new HardwareController(hardwareMap, HardwareController.Team.RED);
         shooter = hwc.shooter();
 
     }

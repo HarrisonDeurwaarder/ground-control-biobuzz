@@ -41,11 +41,11 @@ public class RaceAction extends CompositeAction {
     }
 
     @NonNull
-    public RaceAction clone() {
+    public RaceAction copy() {
         // must recursively clone actions
         Action[] actionClones = new Action[length()];
         // clone all
-        for (int i = 0; i < length(); i++) { actionClones[i] = subactions[i].clone(); }
+        for (int i = 0; i < length(); i++) { actionClones[i] = subactions[i].copy(); }
         // reassemble an action by its clone
         return new RaceAction(actionClones);
     }

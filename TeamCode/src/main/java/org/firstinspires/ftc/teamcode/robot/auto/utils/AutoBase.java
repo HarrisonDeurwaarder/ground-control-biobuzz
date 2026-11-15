@@ -18,7 +18,7 @@ public abstract class AutoBase extends OpMode {
     protected Timer opmodeTimer;
 
     // pathing objects
-    protected Follower follower;
+    //protected Follower follower;
 
     // telemetry objects
     private TelemetryManager panels;
@@ -37,11 +37,11 @@ public abstract class AutoBase extends OpMode {
         panels = PanelsTelemetry.INSTANCE.getTelemetry();
 
         // initialize and set up follower
-        follower = Constants.create(hardwareMap);
-        follower.setPose(getStartingPose());
-        follower.update();
+        //follower = Constants.create(hardwareMap);
+        //follower.setPose(getStartingPose());
+        //follower.update();
         // initialize custom auto objects
-        hwc = new HardwareController(hardwareMap, follower, HardwareController.Team.RED);
+        hwc = new HardwareController(hardwareMap, HardwareController.Team.RED);
 
         // construct paths to register in actions
         buildPaths();
@@ -69,11 +69,11 @@ public abstract class AutoBase extends OpMode {
     @Override
     public void loop() {
         // update auto objects
-        follower.update();
+        //follower.update();
         boolean done = actions.update();
 
         // save position to blackboard in case of issues
-        blackboard.put("Auto Pose", follower.pose());
+        //blackboard.put("Auto Pose", follower.pose());
 
         // if auto is done, halt to prevent any indexing errors
         if (done) {
@@ -93,9 +93,9 @@ public abstract class AutoBase extends OpMode {
     @Override
     public void stop() {
         // save ending position to blackboard
-        blackboard.put("Auto Pose", follower.pose());
+        //blackboard.put("Auto Pose", follower.pose());
         // disable all motors
-        follower.stop();
+        //follower.stop();
     }
 
     protected abstract void buildPaths();
@@ -112,10 +112,10 @@ public abstract class AutoBase extends OpMode {
     protected void addDefaultTelemetry() {
         // this method should be modified for game-specific data
         /* LOCALIZATION VARIABLES */
-        panels.addData("Current Target Pose (IN)", follower.currentPath() != null ? follower.currentPath().get(1.0) : null);
-        panels.addData("Position (IN)", follower.pose());
-        panels.addData("Velocity (IN/SEC)", follower.velocity());
-        panels.addData("Distance Remaining (IN)", follower.remainingDistance());
+        //panels.addData("Current Target Pose (IN)", follower.currentPath() != null ? follower.currentPath().get(1.0) : null);
+        //panels.addData("Position (IN)", follower.pose());
+        //panels.addData("Velocity (IN/SEC)", follower.velocity());
+        //panels.addData("Distance Remaining (IN)", follower.remainingDistance());
     }
 }
 

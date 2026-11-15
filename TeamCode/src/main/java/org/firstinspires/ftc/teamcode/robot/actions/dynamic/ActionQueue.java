@@ -72,7 +72,7 @@ public class ActionQueue {
         public double secondsActive() { return action.secondsActive(); }
 
         @NonNull
-        public EnrichedAction clone() {
+        public EnrichedAction copy() {
             return new EnrichedAction(action);
         }
     }

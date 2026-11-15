@@ -8,5 +8,5 @@ public interface Action {
     public boolean completed();
     public double secondsActive();
     @NonNull
-    public Action clone();
+    public Action copy();
 }

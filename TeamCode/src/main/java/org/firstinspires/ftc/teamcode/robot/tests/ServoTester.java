@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @Configurable
-@TeleOp(name="Servo", group="Test")
+@TeleOp(name="Servo (Powered)", group="Test")
 public class ServoTester extends OpMode {
     protected Timer opmodeTimer;
     private TelemetryManager panels;

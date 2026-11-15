@@ -76,23 +76,23 @@ class AutoTemplate extends AutoBase {
         // here's an example auto
         // you will much more often use SequentialAction than any other composite
         // you can reuse the same action, but it must be cloned
-        Action firstDelay = sequential(
-                delay(3.0),
-                followPath(follower, toPose1)
-        );
+        //Action firstDelay = sequential(
+                //delay(3.0),
+                //followPath(follower, toPose1)
+        //);
         // set "actions" at the end
-        actions = sequential(
-                firstDelay.clone(),
-                sequential(
-                        delay(2.0),
-                        doNothingAtAll(),
-                        followPath(follower, toPose2then1),
-                        followPath(follower, toPose2)
-                ),
-                firstDelay.clone(),
-                sequential(
-                        followPath(follower, toEnd)
-                )
-        );
+        //actions = sequential(
+                //firstDelay.copy(),
+                //sequential(
+                        //delay(2.0),
+                        //doNothingAtAll(),
+                        //followPath(follower, toPose2then1),
+                        //followPath(follower, toPose2)
+                //),
+                //firstDelay.copy(),
+                //sequential(
+                //        followPath(follower, toEnd)
+                //)
+        //);
     }
 }

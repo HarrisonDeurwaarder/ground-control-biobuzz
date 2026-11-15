@@ -1,6 +1,15 @@
 package org.firstinspires.ftc.teamcode.robot.teleop.utils;
 
+import com.pedropathing.math.Pose;
+
 class TeleOpTemplate extends TeleOpBase {
+
+    Pose startingPose = new Pose(0.0, 0.0, 0.0);
+
+    @Override
+    public Pose getStartingPose() {
+        return startingPose;
+    }
 
     @Override
     public void init() {
@@ -61,7 +70,7 @@ class TeleOpTemplate extends TeleOpBase {
 
         // example control for resetting odometry position to counteract drift
         // for something of this nature (high impact, low reversibility), ensure controls can not be accidentally triggered
-        if (gamepad1.left_bumper && gamepad1.right_bumper) follower.setPose(recalibratedPose); // tell pedro that it is at the known recalibration pose
+        // if (gamepad1.left_bumper && gamepad1.right_bumper) follower.setPose(recalibratedPose); // tell pedro that it is at the known recalibration pose
 
         // ...
     }

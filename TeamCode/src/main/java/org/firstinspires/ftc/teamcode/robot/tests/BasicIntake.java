@@ -12,8 +12,12 @@ public class BasicIntake extends TeleOpBase {
     Intake intake;
 
     @Override
+    public Pose getStartingPose() {
+        return startingPose;
+    }
+
+    @Override
     public void init() {
-        defaultStartingPose = startingPose;
         super.init();
         intake = hwc.intake();
     }
@@ -25,8 +29,6 @@ public class BasicIntake extends TeleOpBase {
         else if (gamepad1.leftTriggerWasReleased()) { intake.setPower(Intake.PowerState.OFF); }
         // TOGGLE INTAKE/OUTTAKE
         if (gamepad1.leftBumperWasPressed()) { intake.toggleDirection(); }
-        // TOGGLE FLOWER
-        if (gamepad1.bWasPressed()) { intake.toggleFlower(); }
     }
 
     @Override

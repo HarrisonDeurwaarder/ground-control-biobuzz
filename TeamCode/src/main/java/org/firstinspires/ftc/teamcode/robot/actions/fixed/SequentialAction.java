@@ -53,11 +53,11 @@ public class SequentialAction extends CompositeAction {
     }
 
     @NonNull
-    public SequentialAction clone() {
+    public SequentialAction copy() {
         // must recursively clone actions
         Action[] actionClones = new Action[length()];
         // clone all
-        for (int i = 0; i < length(); i++) { actionClones[i] = subactions[i].clone(); }
+        for (int i = 0; i < length(); i++) { actionClones[i] = subactions[i].copy(); }
         // reassemble an action by its clone
         return new SequentialAction(actionClones);
     }

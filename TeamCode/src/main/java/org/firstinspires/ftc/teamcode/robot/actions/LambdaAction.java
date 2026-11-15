@@ -48,5 +48,5 @@ public class LambdaAction implements Action {
     }
 
     @NonNull
-    public LambdaAction clone() { return new LambdaAction(onStart, onStep, onStop, completionCondition); }
+    public LambdaAction copy() { return new LambdaAction(onStart, onStep, onStop, completionCondition); }
 }
