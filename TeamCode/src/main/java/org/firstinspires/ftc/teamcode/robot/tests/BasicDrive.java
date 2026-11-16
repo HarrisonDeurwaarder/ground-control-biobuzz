@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.robot.tests;
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.robot.teleop.utils.TeleOpBase;
+import org.firstinspires.ftc.teamcode.robot.opmodes.teleop.utils.TeleOpBase;
 
 @TeleOp(name="Basic Drive", group="Test")
 public class BasicDrive extends TeleOpBase {

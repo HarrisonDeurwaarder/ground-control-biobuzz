@@ -3,10 +3,6 @@ package org.firstinspires.ftc.teamcode.robot.hardware.mechanisms;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
-
-import org.firstinspires.ftc.teamcode.robot.math.Helpers;
 
 public class Intake {
 

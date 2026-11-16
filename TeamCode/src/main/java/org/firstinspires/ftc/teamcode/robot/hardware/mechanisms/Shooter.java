@@ -10,13 +10,13 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.robot.hardware.control.ShootingWhileMoving;
-import org.firstinspires.ftc.teamcode.robot.math.linalg.Vector;
-import org.firstinspires.ftc.teamcode.robot.models.LinearInterpolation;
-import org.firstinspires.ftc.teamcode.robot.math.Helpers;
-import org.firstinspires.ftc.teamcode.robot.hardware.control.pid.PIDController;
-import org.firstinspires.ftc.teamcode.robot.hardware.control.pid.PIDGains;
-import static org.firstinspires.ftc.teamcode.robot.math.linalg.Point.point;
+import org.firstinspires.ftc.teamcode.robot.core.control.controllers.ShootingWhileMoving;
+import org.firstinspires.ftc.teamcode.robot.core.math.linalg.Vector;
+import org.firstinspires.ftc.teamcode.robot.core.models.LinearInterpolation;
+import org.firstinspires.ftc.teamcode.robot.core.math.Helpers;
+import org.firstinspires.ftc.teamcode.robot.core.control.controllers.PID;
+import org.firstinspires.ftc.teamcode.robot.core.control.pid.PIDGains;
+import static org.firstinspires.ftc.teamcode.robot.core.math.linalg.Point.point;
 
 
 public class Shooter {
@@ -43,7 +43,7 @@ public class Shooter {
 
     private final DcMotorEx flywheel;
     private final ServoImplEx gate, turret1, turret2;
-    private final PIDController flywheelPID;
+    private final PID flywheelPID;
     private final Follower follower;
 
     private FeedingState feedingState;
@@ -63,7 +63,7 @@ public class Shooter {
         turret1 = hardwareMap.get(ServoImplEx.class, "turret1");
         turret2 = hardwareMap.get(ServoImplEx.class, "turret2");
         // create flywheel pid
-        flywheelPID = new PIDController(flywheelGains);
+        flywheelPID = new PID(flywheelGains);
     }
 
     /* SETTERS */

@@ -7,8 +7,8 @@ import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.robot.hardware.control.TimeDependentLPF;
-import org.firstinspires.ftc.teamcode.robot.math.linalg.Vector;
+import org.firstinspires.ftc.teamcode.robot.core.control.filters.TimeDependentLP;
+import org.firstinspires.ftc.teamcode.robot.core.math.linalg.Vector;
 
 import java.util.ArrayList;
 
@@ -68,7 +68,7 @@ public class VisionManager {
         private Vector p, v;
         private double confidence = 0.0; // neutral confidence score
         private int discreteAge = 0;
-        private TimeDependentLPF lpfp = new TimeDependentLPF(1.0, 3), lpfv = new TimeDependentLPF(1.0, 3);
+        private TimeDependentLP lpfp = new TimeDependentLP(1.0, 3), lpfv = new TimeDependentLP(1.0, 3);
         private Timer timer = new Timer();
 
         // scratch objects

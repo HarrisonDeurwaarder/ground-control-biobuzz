@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.robot.hardware.mechanisms.Shooter;
-import org.firstinspires.ftc.teamcode.robot.teleop.utils.TeleOpBase;
+import org.firstinspires.ftc.teamcode.robot.opmodes.teleop.utils.TeleOpBase;
 
 @TeleOp(name="Basic Intake & Turret", group="Test")
 public class BasicIntakeAndTurret extends TeleOpBase {
